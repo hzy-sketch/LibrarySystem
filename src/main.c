@@ -1,5 +1,15 @@
 #include <stdio.h>
+#include <string.h>
 
+//定义结构体
+struct user{
+	char username[20];
+	char password[20];
+};
+//函数声明
+void registerUser();
+
+//主菜单
 int main() {
     int choice;
     while (1) {
@@ -14,7 +24,7 @@ int main() {
 
         switch (choice) {
             case 1:
-                printf("注册功能待实现\n");
+                registerUser();
                 break;
             case 2:
                 printf("登录功能待实现\n");
@@ -26,4 +36,26 @@ int main() {
                 printf("输入错误！\n");
         }
     }
+}
+
+//注册功能实现
+void registerUser()
+{
+	struct user newUser;
+	FILE *fp;
+
+    	printf("请输入用户名：");
+    	scanf("%s", newUser.username);
+    	printf("请输入密码：");
+    	scanf("%s", newUser.password);
+
+    	fp = fopen("users.txt", "a");
+    	if (fp == NULL) {
+        	printf("文件打开失败！\n");
+        	return;
+    	}	
+    	// 把结构体里的数据写入文件
+    	fprintf(fp, "%s %s\n", newUser.username, newUser.password);
+    	fclose(fp);
+    	printf("注册成功！\n");
 }
