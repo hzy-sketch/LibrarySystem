@@ -23,6 +23,8 @@ int loginUser();
 void addBook();
 //查看图书
 void showBooks();
+//删除图书
+void deleteBook();
 
 //主菜单
 int main() {
@@ -52,11 +54,12 @@ int main() {
 	    case 3:{
 	
 		int sub;
-		printf("\n1.添加图书\n2.查看图书\n请输入:");
+		printf("\n1.添加图书\n2.查看图书\n3.删除图书\n请输入:");
 		scanf("%d",&sub);
 
 		if(sub==1)addBook();
 		else if(sub==2)showBooks();
+		else if(sub==3)deleteBook();
 		else printf("输入错误!\n");
 
 		break;
@@ -187,4 +190,41 @@ void showBooks(){
     printf("----------------------------\n");
 
     fclose(fp);
+}
+
+//实现图书删除功能
+void deleteBook(){
+    FILE*fp,*temp;
+    char name[50],author[50];
+    char delname[50];
+    int quantity;
+    int found=0;
+
+    printf("请输入要删除的书名:");
+    scanf("%s",delname);
+
+    fp=fopen("books.txt","r");
+    if(fp==NULL){
+        printf("暂无图书信息!\n");
+        return;
+    }
+
+    temp=fopen("temp.txt","w");
+
+    while(fscanf(fp,"%[^|]|%[^|]|%d\n",name,author,&quantity)==3){
+        if(strcmp(name,delname)==0){
+            found=1;
+            continue;
+        }
+        fprintf(temp,"%s|%s|%d\n",name,author,quantity);
+    }
+
+    fclose(fp);
+    fclose(temp);
+
+    remove("books.txt");
+    rename("temp.txt","books.txt");
+
+    if(found)printf("删除成功!\n");
+    else printf("未找到该图书!\n");
 }
