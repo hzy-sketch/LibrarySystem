@@ -21,6 +21,8 @@ void registerUser();
 int loginUser();
 //添加图书
 void addBook();
+//查看图书
+void showBooks();
 
 //主菜单
 int main() {
@@ -36,18 +38,29 @@ int main() {
         printf("请输入：");
         scanf("%d", &choice);
 
-        switch (choice) {
+        switch(choice){
             case 1:
                 registerUser();
                 break;
             case 2:
-                if (loginUser()) {
+                if(loginUser()){
         		printf("登录成功！欢迎进入图书管理系统！\n");
-    		} else {
+    		}else{
         		printf("用户名或密码错误！\n");
     		}
                 break;
-	    case 3:
+	    case 3:{
+	
+		int sub;
+		printf("\n1.添加图书\n2.查看图书\n请输入:");
+		scanf("%d",&sub);
+
+		if(sub==1)addBook();
+		else if(sub==2)showBooks();
+		else printf("输入错误!\n");
+
+		break;
+                }
 		addBook();
 		break;
             case 0:
@@ -151,3 +164,27 @@ void addBook(){
     printf("添加成功!\n");
 }
 
+//实现查看图书功能
+void showBooks(){
+    FILE*fp;
+    char name[50],author[50];
+    int quantity;
+
+    fp=fopen("books.txt","r");
+    if(fp==NULL){
+        printf("暂无图书信息!\n");
+        return;
+    }
+
+    printf("\n当前图书列表:\n");
+    printf("----------------------------\n");
+    printf("书名\t作者\t数量\n");
+
+    while(fscanf(fp,"%[^|]|%[^|]|%d\n",name,author,&quantity)==3){
+        printf("%s\t%s\t%d\n",name,author,quantity);
+    }
+
+    printf("----------------------------\n");
+
+    fclose(fp);
+}
