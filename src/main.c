@@ -7,7 +7,11 @@ struct user{
 	char password[20];
 };
 //函数声明
+
+//注册函数
 void registerUser();
+//登录函数
+int loginUser();
 
 //主菜单
 int main() {
@@ -27,7 +31,11 @@ int main() {
                 registerUser();
                 break;
             case 2:
-                printf("登录功能待实现\n");
+                if (loginUser()) {
+        		printf("登录成功！欢迎进入图书管理系统！\n");
+    		} else {
+        		printf("用户名或密码错误！\n");
+    		}
                 break;
             case 0:
                 printf("退出系统\n");
@@ -58,4 +66,48 @@ void registerUser()
     	fprintf(fp, "%s %s\n", newUser.username, newUser.password);
     	fclose(fp);
     	printf("注册成功！\n");
+}
+
+//登录功能实现
+int loginUser()
+{
+
+	 struct user inputUser;
+	 struct user fileUser;
+	 FILE *fp;
+	 int found=0;
+
+	 printf("请输入用户名：");
+	 scanf("%s",inputUser.username);
+
+	 printf("请输入密码：");
+	 scanf("%s",inputUser.password);
+
+	 fp=fopen("users.txt","r");
+	 if(fp==NULL){
+                 printf("用户文件不存在！\n");
+		 return 0;
+	 }
+
+	 while(fscanf(fp,"%s %s",fileUser.username,fileUser.password)!=EOF) 
+	 {
+
+		 if(strcmp(inputUser.username,fileUser.username)==0&&
+		    strcmp(inputUser.password, fileUser.password)==0) 
+		 {
+                         found=1;
+		         break;
+		 }
+	 }
+
+	 fclose(fp);
+
+	 if(found){
+		printf("登录成功！\n");
+		return 1;   // ✅ 成功
+	 }else{
+		printf("用户名或密码错误！\n");
+		return 0;   // ❌ 失败
+	 }
+
 }
