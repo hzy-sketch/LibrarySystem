@@ -25,6 +25,8 @@ void addBook();
 void showBooks();
 //删除图书
 void deleteBook();
+//借书
+void borrowBook();
 
 //主菜单
 int main() {
@@ -54,12 +56,13 @@ int main() {
 	    case 3:{
 	
 		int sub;
-		printf("\n1.添加图书\n2.查看图书\n3.删除图书\n请输入:");
+		printf("\n1.添加图书\n2.查看图书\n3.删除图书\n4.借书\n请输入:");
 		scanf("%d",&sub);
 
 		if(sub==1)addBook();
 		else if(sub==2)showBooks();
 		else if(sub==3)deleteBook();
+		else if(sub==4)borrowBook();
 		else printf("输入错误!\n");
 
 		break;
@@ -227,4 +230,45 @@ void deleteBook(){
 
     if(found)printf("删除成功!\n");
     else printf("未找到该图书!\n");
+}
+
+//实现借书功能
+void borrowBook(){
+    FILE*fp,*temp;
+    char name[50],author[50];
+    char borrowname[50];
+    int quantity;
+    int found=0;
+
+    printf("请输入要借的书名:");
+    scanf("%s",borrowname);
+
+    fp=fopen("books.txt","r");
+    if(fp==NULL){
+        printf("暂无图书信息!\n");
+        return;
+    }
+
+    temp=fopen("temp.txt","w");
+
+    while(fscanf(fp,"%[^|]|%[^|]|%d\n",name,author,&quantity)==3){
+        if(strcmp(name,borrowname)==0){
+            found=1;
+            if(quantity>0){
+                quantity--;
+                printf("借书成功!\n");
+            }else{
+                printf("库存不足!\n");
+            }
+        }
+        fprintf(temp,"%s|%s|%d\n",name,author,quantity);
+    }
+
+    fclose(fp);
+    fclose(temp);
+
+    remove("books.txt");
+    rename("temp.txt","books.txt");
+
+    if(!found)printf("未找到该图书!\n");
 }
