@@ -1,17 +1,26 @@
 #include <stdio.h>
 #include <string.h>
 
-//定义结构体
+/************定义结构体**************/
+//用户信息结构体
 struct user{
 	char username[20];
 	char password[20];
 };
-//函数声明
+//图书信息结构体
+struct book{
+	char name[50];
+	char author[50];
+	int quantity;
+};
 
+/****************函数声明*****************/
 //注册函数
 void registerUser();
 //登录函数
 int loginUser();
+//添加图书
+void addBook();
 
 //主菜单
 int main() {
@@ -22,6 +31,7 @@ int main() {
         printf("========================\n");
         printf("1. 注册\n");
         printf("2. 登录\n");
+	printf("3.图书管理\n");
         printf("0. 退出\n");
         printf("请输入：");
         scanf("%d", &choice);
@@ -37,6 +47,9 @@ int main() {
         		printf("用户名或密码错误！\n");
     		}
                 break;
+	    case 3:
+		addBook();
+		break;
             case 0:
                 printf("退出系统\n");
                 return 0;
@@ -111,3 +124,30 @@ int loginUser()
 	 }
 
 }
+
+//实现添加图书功能
+void addBook(){
+    struct book b;
+    FILE*fp;
+
+    printf("请输入书名:");
+    scanf("%s",b.name);
+
+    printf("请输入作者:");
+    scanf("%s",b.author);
+
+    printf("请输入数量:");
+    scanf("%d",&b.quantity);
+
+    fp=fopen("books.txt","a");
+    if(fp==NULL){
+        printf("文件打开失败!\n");
+        return;
+    }
+
+    fprintf(fp,"%s|%s|%d\n",b.name,b.author,b.quantity);
+    fclose(fp);
+
+    printf("添加成功!\n");
+}
+
